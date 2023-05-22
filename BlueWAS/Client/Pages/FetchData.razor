@@ -1,0 +1,46 @@
+﻿@page "/fetchdata"
+@using BlueWAS.Shared
+@inject HttpClient Http
+
+<PageTitle>Students</PageTitle>
+
+<h1>Students</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (students == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Roll number</th>
+                <th>DOB</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var std in students)
+            {
+                <tr>
+                    <td>@std.Name</td>
+                    <td>@std.RollNumber</td>
+
+                    <td>@std.DOB.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Student[]? students;
+
+    protected override async Task OnInitializedAsync()
+    {
+        students = await Http.GetFromJsonAsync<Student[]>("api/students");
+    }
+}

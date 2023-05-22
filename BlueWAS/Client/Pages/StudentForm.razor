@@ -1,0 +1,64 @@
+﻿@page "/AddStudent"
+@using BlueWAS.Shared
+@using System.Net
+
+@inject HttpClient http
+
+<h3>Here is StudentForm</h3>
+
+<EditForm Model="@student" OnValidSubmit="@HandleOnSubmit">
+    <DataAnnotationsValidator />
+    
+    <ValidationSummary/>
+   <h2>@Messsage</h2>
+
+    <p>
+        <label>
+            Student  Name :
+            <InputText @bind-Value="student.Name" />
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Student  RollNumber :
+            <InputText @bind-Value="student.RollNumber" />
+        </label>
+    </p>
+
+    <p>
+        <label>
+            Student  DOB :
+            <InputDate @bind-Value="student.DOB" />
+        </label>
+    </p>
+
+
+    <button type="submit">Submit</button>
+
+
+
+</EditForm>
+
+
+@code {
+    string Messsage="";
+    Student student = new Student()
+        {
+            DOB = DateTime.Now
+    };
+
+    async void HandleOnSubmit()
+    {
+        //Process information and send to server
+
+        var res=await http.PostAsJsonAsync<Student>("api/Students",student);
+
+        if(res.StatusCode == HttpStatusCode.Created)
+        {
+            Messsage = "Data saved Sucessfully";            
+        }
+        StateHasChanged();
+    }
+
+}
